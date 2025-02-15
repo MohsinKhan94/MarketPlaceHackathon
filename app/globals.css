@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 20 14 40;
+  --foreground: 255 255 255;
+  --primary: 86 11 173;
+  --secondary: 255 86 86;
+  --accent: 10 186 181;
+}
+
+body {
+  color: rgb(var(--foreground));
+  background: linear-gradient(to bottom right, rgb(var(--primary)), rgb(var(--secondary)));
+  min-height: 100vh;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
