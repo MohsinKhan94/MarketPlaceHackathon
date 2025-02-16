@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { NextResponse } from "next/server";
 
@@ -9,8 +9,8 @@ export async function GET(req: Request) {
     console.log("📡 API Called");
 
     const { searchParams } = new URL(req.url);
-    const trackingNumber = searchParams.get("trackingNumber");
-    const carrier = searchParams.get("carrier");
+    const trackingNumber = searchParams.get("trackingNumber")?.trim();
+    const carrier = searchParams.get("carrier")?.trim();
 
     console.log("🔍 Tracking Number:", trackingNumber);
     console.log("🚛 Carrier:", carrier);
@@ -24,24 +24,26 @@ export async function GET(req: Request) {
     }
 
     // Fetch tracking details (Replace this with an actual API call in the future)
-    const trackingData = getMockTrackingData(trackingNumber, carrier);
+    const trackingData = await getMockTrackingData(trackingNumber, carrier);
 
     console.log("✅ API Success:", trackingData);
     return NextResponse.json(trackingData, { status: 200 });
   } catch (error) {
     console.error("⚠️ API Error:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Internal Server Error", details: (error as Error).message },
       { status: 500 }
     );
   }
 }
 
 // Function to return mock tracking data (can be replaced with real API response)
-function getMockTrackingData(trackingNumber: string, carrier: string) {
+async function getMockTrackingData(trackingNumber: string, carrier: string) {
   return {
     trackingNumber,
     carrier,
+    status: "Out for Delivery",
+    estimatedDelivery: "2024-02-16",
     history: [
       { status: "Shipped", location: "Warehouse", timestamp: "2024-02-14 10:00 AM" },
       { status: "In Transit", location: "City Hub", timestamp: "2024-02-14 02:00 PM" },
