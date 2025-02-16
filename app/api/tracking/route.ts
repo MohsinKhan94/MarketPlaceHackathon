@@ -1,15 +1,14 @@
-"use server";
+import { NextResponse, NextRequest } from "next/server";
 
-import { NextResponse } from "next/server";
+// Ensure dynamic execution
+export const dynamic = "force-dynamic";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     console.log("📡 API Called");
 
-    // Ensure dynamic execution
-    (global as any).dynamic = "force-dynamic";
-
-    const { searchParams } = new URL(req.url);
+    // Use `req.nextUrl` to access query parameters
+    const { searchParams } = req.nextUrl;
     const trackingNumber = searchParams.get("trackingNumber");
     const carrier = searchParams.get("carrier");
 
