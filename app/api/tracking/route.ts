@@ -2,15 +2,16 @@
 
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic"; // Ensure this API route runs dynamically
-
 export async function GET(req: Request) {
   try {
     console.log("📡 API Called");
 
+    // Ensure dynamic execution
+    (global as any).dynamic = "force-dynamic";
+
     const { searchParams } = new URL(req.url);
-    const trackingNumber = searchParams.get("trackingNumber")?.trim();
-    const carrier = searchParams.get("carrier")?.trim();
+    const trackingNumber = searchParams.get("trackingNumber");
+    const carrier = searchParams.get("carrier");
 
     console.log("🔍 Tracking Number:", trackingNumber);
     console.log("🚛 Carrier:", carrier);
@@ -24,26 +25,24 @@ export async function GET(req: Request) {
     }
 
     // Fetch tracking details (Replace this with an actual API call in the future)
-    const trackingData = await getMockTrackingData(trackingNumber, carrier);
+    const trackingData = getMockTrackingData(trackingNumber, carrier);
 
     console.log("✅ API Success:", trackingData);
     return NextResponse.json(trackingData, { status: 200 });
   } catch (error) {
     console.error("⚠️ API Error:", error);
     return NextResponse.json(
-      { error: "Internal Server Error", details: (error as Error).message },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
 }
 
 // Function to return mock tracking data (can be replaced with real API response)
-async function getMockTrackingData(trackingNumber: string, carrier: string) {
+function getMockTrackingData(trackingNumber: string, carrier: string) {
   return {
     trackingNumber,
     carrier,
-    status: "Out for Delivery",
-    estimatedDelivery: "2024-02-16",
     history: [
       { status: "Shipped", location: "Warehouse", timestamp: "2024-02-14 10:00 AM" },
       { status: "In Transit", location: "City Hub", timestamp: "2024-02-14 02:00 PM" },
